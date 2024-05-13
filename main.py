@@ -1,16 +1,54 @@
-# This is a sample Python script.
+def main():
+    book_path = "books/frankenstein.txt"
+    text = get_book_text(book_path)
+    num_words = get_num_words(text)
+    char_counts = count_characters(text)
+    chars_sorted_list = chars_dict_to_sorted_list(char_counts)
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{num_words} words found in the document")
+    print()
+
+    for item in chars_sorted_list:
+        if not item["char"].isalpha():
+            continue
+        print(f"The '{item['char']}' character was found {item['num']} times")
+
+    print("--- End report ---")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def get_num_words(text):
+    words = text.split()
+    return len(words)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def sort_on(d):
+    return d["num"]
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+def chars_dict_to_sorted_list(num_chars_dict):
+    sorted_list = []
+    for ch in num_chars_dict:
+        sorted_list.append({"char": ch, "num": num_chars_dict[ch]})
+    sorted_list.sort(reverse=True, key=sort_on)
+    return sorted_list
+
+
+def count_characters(text):
+    char_count = {}
+    for char in text:
+        lowered = char.lower()
+        if lowered in char_count:
+            char_count[lowered] += 1
+        else:
+            char_count[lowered] = 1
+    return char_count
+
+
+def get_book_text(path):
+    with open(path) as f:
+        return f.read()
+
+
+if __name__ == "__main__":
+    main()
